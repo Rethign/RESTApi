@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from rest_framework import generics
-import randnum, json
+import json
+from .randnum import *
 from .serializers import RandNumSerializer
 from .models import RandNum
 
@@ -15,8 +16,7 @@ class RandNumCreateView(generics.ListCreateAPIView):
 
 	def perform_create(self, serializer):
 		serializer.save(owner = self.request.user)
-		c = randnum.rand(serializer)
-		serializer.save(rand_list = str(c))
+		create_rand(serializer)
 
 class RandNumDetailsView(generics.RetrieveUpdateDestroyAPIView):
 	queryset = RandNum.objects.all()

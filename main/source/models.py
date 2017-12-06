@@ -13,10 +13,10 @@ from django.db import models
 class RandNum(models.Model):
 #	author = models.CharField(max_length = 255)
 	owner = models.ForeignKey('auth.User', related_name = 'randnum', on_delete=models.CASCADE)
-	max_val = models.IntegerField()
+	dim = models.IntegerField()
 	count_of_num = models.IntegerField()
 	rand_list = models.CharField(max_length = 1000)
-
+	fact = models.CharField(max_length = 1000000)
 	def __str__(self):
 		return "{}".format(self.owner)
 	
