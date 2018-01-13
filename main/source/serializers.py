@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from .models import RandNum, TestClass
 from .randnum import *
+from .testclass import *
 
+from rest_framework.response import Response
 class RandNumSerializer(serializers.ModelSerializer):
 
 	owner = serializers.ReadOnlyField(source = 'owner.username')
@@ -18,29 +20,23 @@ class RandNumSerializer(serializers.ModelSerializer):
 		
 class TestSerializer(serializers.Serializer):
 
-	dim = serializers.IntegerField(write_only = True)
-	count_of_num = serializers.IntegerField(write_only = True)
+	dim = serializers.IntegerField()
+	count_of_num = serializers.IntegerField()
 	
-	rand_list = serializers.ListField(
+	test_fact = serializers.ListField(
 		child = serializers.FloatField(min_value = -1.0, max_value = 1.0)
 	)
-	rand_list = serializers.ReadOnlyField()
+	test_fact = serializers.ReadOnlyField()
 	
-	fact = serializers.ListField(
+	test_uni = serializers.ListField(
 		child = serializers.FloatField(min_value = -1.0, max_value = 1.0)
 	)
-	fact = serializers.ReadOnlyField()
-
+	test_uni = serializers.ReadOnlyField()
 	def create(self, validated_data):
-		print ('j')
-		return TestClass(**validated_data)
-		
-	def update(self, instance, validated_data):
-		print('c')
-		instance.rand_list = create_uni(instance.dim, instance.count_of_num)
-		instance.fact = create_fact(instace.dim, instance.count_of_num)
-		return instance
+		return TestClass(id=None, **validated_data)
 	
+	def update(self, instance, validated_data):
+		for field, value in validated_data.items():
+			setattr(instance, field, value)
+		return instance
 
-		
-		
