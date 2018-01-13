@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import json
 from django.db import models
+from .randnum import *
 #from numpy import random
 #from django.db.models.signals import post_save
 #from django.contrib.auth.models import User
@@ -27,3 +28,9 @@ class RandNum(models.Model):
 #		Token.objects.create(user = instance)
 
 # Create your models here.
+class TestClass(object):
+		
+	def __init__(self, dim, count_of_num):
+		self.test_uni = create_uni(dim, count_of_num)
+		self.test_fact = create_fact(dim, count_of_num)
+		

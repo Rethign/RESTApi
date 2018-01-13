@@ -1,4 +1,3 @@
-from .serializers import RandNumSerializer
 from numpy import *
 
 '''
@@ -8,14 +7,7 @@ def rand(serializer):
 #	c = random.randint(a, size = (1, b))
 	c = random.uniform(-1.0, 1.0, size = b)
 	return c
-'''
-
-def create_rand(serializer):
-	dim = serializer.validated_data.get('dim')
-	len = serializer.validated_data.get('count_of_num')
-	uniform = create_uni(dim, len)
-	factorial = create_fact(dim, len)
-	serializer.save(rand_list = uniform, fact = factorial)
+'''		
 
 def create_uni(dim, len):
 	c = ""
@@ -35,7 +27,7 @@ def create_uni(dim, len):
 
 def create_fact(dim, len):
 	conds = power(len, dim)
-
+	
 	H = zeros((conds, dim))
 	rang = conds
 	tmp = 0
