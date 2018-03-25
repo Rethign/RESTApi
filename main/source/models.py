@@ -3,34 +3,52 @@ from __future__ import unicode_literals
 
 import json
 from django.db import models
-from .randnum import *
-#from numpy import random
-#from django.db.models.signals import post_save
-#from django.contrib.auth.models import User
-#from rest_framework.authtoken.models import Token
-#from django.dispatch import receiver
+from .plans import *
+import copy
+from matplotlib.pyplot import *
 
 
-class RandNum(models.Model):
-#	author = models.CharField(max_length = 255)
-	owner = models.ForeignKey('auth.User', related_name = 'randnum', on_delete=models.CASCADE)
-	dim = models.IntegerField()
-	count_of_num = models.IntegerField()
-	rand_list = models.CharField(max_length = 1000)
-	fact = models.CharField(max_length = 1000000)
-	def __str__(self):
-		return "{}".format(self.owner)
-	
+class Plan(object):
+	plan = flags.copy()
 
-#@receiver(post_save, sender = User)
-#def create_auth_token(sender, instance = None, created = False, **kwargs):
-#	if created:
-#		Token.objects.create(user = instance)
+	def __init__(self, **kwargs):
+		self.plan_type = kwargs.get('plan_type', None)
+		print("Plan constructor")
 
-# Create your models here.
-class TestClass(object):
-		
-	def __init__(self, dim, count_of_num):
-		self.test_uni = create_uni(dim, count_of_num)
-		self.test_fact = create_fact(dim, count_of_num)
-		
+	def update(self, data):
+		print("Plan update")
+		for field, value in data.items():
+			setattr(self, field, value)
+		self.dim = int(self.dim)
+		self.count_of_num = int(self.count_of_num)
+		self.generate()
+		return self.plan
+
+	def generate(self):
+		x = []
+		print("Creating plan " + str(self.plan_type))
+		if flags.get("Latin_HyperCube") == True:
+			self.plan["Latin_HyperCube"] = createLhs(self.dim, self.count_of_num)
+		if flags.get("Random") == True:
+			self.plan["Random"] = createSimple(self.dim, self.count_of_num, "Rand")
+			x = np.swapaxes(self.plan["Random"], 0, 1)
+			plot(x[0], x[1], 'ro')
+			show()
+		if flags.get("Uniform") == True:
+			self.plan["Uniform"] = createUni(self.dim, self.count_of_num, "Uni")
+		if flags.get("Factorial") == True:
+			self.plan["Factorial"] = createFact(self.dim, self.count_of_num)
+		if flags.get("Halton") == True:
+			self.plan["Halton"] = createHalton(self.dim, self.count_of_num)
+			x = np.swapaxes(self.plan["Halton"], 0, 1)
+			plot(x[0], x[1], 'bo')
+			show()
+		if flags.get("Sobol") == True:
+			self.plan["Sobol"] = createSobol(self.dim, self.count_of_num)
+			x = np.swapaxes(self.plan["Sobol"], 0, 1)
+			plot(x[0], x[1], 'go')
+			show()
+		return self.plan
+
+
+
